@@ -3,7 +3,8 @@ import { RouteRecordRaw } from 'vue-router';
 const routes: RouteRecordRaw[] = [
   {
     path: '/',
-    component: () => import('layouts/FirstLayout.vue'),
+    component: () => import('layouts/MainLayout.vue'),
+    children: [{ path: '', component: () => import('layouts/FirstLayout.vue') }],
   },
   {
     path: '/register',
@@ -17,15 +18,10 @@ const routes: RouteRecordRaw[] = [
   },
   {
     path: '/main',
-    component: () => import('pages/MainPage.vue'),
-    name: 'main',
-    meta: { requestAuth: true}
+    component: () => import('layouts/MainLayout.vue'),
+    children: [{ path: '', component: () => import('pages/MainPage.vue'), name: 'main' }],
+    meta: { requestAuth: true }
   },
-
-
-
-  // Always leave this as last one,
-  // but you can also remove it
   {
     path: '/:catchAll(.*)*',
     component: () => import('pages/ErrorNotFound.vue'),

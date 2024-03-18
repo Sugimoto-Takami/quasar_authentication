@@ -5,7 +5,7 @@
         <q-btn flat dense round icon="menu" aria-label="Menu" @click="toggleLeftDrawer" />
 
         <q-toolbar-title>
-          Quasar Apppp
+          Welcome
         </q-toolbar-title>
 
         <div>Quasar v{{ $q.version }}</div>
@@ -30,12 +30,19 @@
 
 <script setup lang="ts">
 import { ref } from 'vue';
+import { useQuasar } from 'quasar';
+import { getAuth, signOut } from 'firebase/auth';
+import { useRouter } from 'vue-router'
 import EssentialLink, { EssentialLinkProps } from 'components/EssentialLink.vue';
 
 defineOptions({
   name: 'MainLayout'
 });
 
+const $q = useQuasar();
+const auth = getAuth();
+const router = useRouter();
+const leftDrawerOpen = ref(false);
 const linksList: EssentialLinkProps[] = [
   {
     title: 'Docs',
@@ -50,38 +57,21 @@ const linksList: EssentialLinkProps[] = [
     link: 'https://github.com/quasarframework'
   },
   {
-    title: 'Discord Chat Channel',
-    caption: 'chat.quasar.dev',
-    icon: 'chat',
-    link: 'https://chat.quasar.dev'
-  },
-  {
-    title: 'Forum',
-    caption: 'forum.quasar.dev',
-    icon: 'record_voice_over',
-    link: 'https://forum.quasar.dev'
-  },
-  {
-    title: 'Twitter',
-    caption: '@quasarframework',
-    icon: 'rss_feed',
-    link: 'https://twitter.quasar.dev'
-  },
-  {
-    title: 'Facebook',
-    caption: '@QuasarFramework',
-    icon: 'public',
-    link: 'https://facebook.quasar.dev'
-  },
-  {
-    title: 'Quasar Awesome',
-    caption: 'Community Quasar projects',
-    icon: 'favorite',
-    link: 'https://awesome.quasar.dev'
+    title: 'Log out',
+    icon: 'exit_to_app',
+    action: performSignOut
   }
 ];
 
-const leftDrawerOpen = ref(false);
+function performSignOut() {
+  signOut(auth)
+  .then(() => {
+    $q.notify({ message: 'Logged out successfully', color: 'positive' });
+    router.push('/login');
+  }).catch((error) => {
+    $q.notify({ message: `Logout failed: ${error.message}`, color: 'negative' });
+  });
+}
 
 function toggleLeftDrawer() {
   leftDrawerOpen.value = !leftDrawerOpen.value;

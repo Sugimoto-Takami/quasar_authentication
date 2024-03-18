@@ -1,6 +1,6 @@
 # Quasar App (quasar-default)
 
-A Quasar Project
+基本的な認証システム
 
 ## Install the dependencies
 ```bash
